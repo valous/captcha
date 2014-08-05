@@ -1,0 +1,14 @@
+{
+    "name": "valous/capcha",
+    "type": "library",
+    "license": "none",
+    "description": "Capcha",
+    "autoload": {
+        "psr-4": {
+            "Valous\\Capcha\\App\\": "App/src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
