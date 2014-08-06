@@ -5,10 +5,11 @@
     "description": "Capcha",
     "autoload": {
         "psr-4": {
-            "Valous\\Capcha\\App\\": "App/src/"
+            "Valous\\Capcha\\": "Capcha/src/"
         }
     },
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "symfony/yaml": "2.3.*"
     }
 }
