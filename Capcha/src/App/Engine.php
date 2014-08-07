@@ -27,12 +27,16 @@ class Engine
      */
     public function __construct($configDir)
     {
+        session_start();
         $config = new Config($configDir);
         $this->config = $config->getConfig();
+        
+        $this->cleanTemp();
     }
 
     
     /**
+     * @return string
      */
     public function createCapcha()
     {       
@@ -44,10 +48,50 @@ class Engine
         $this->generateChars();
         
         $this->capchaImage = new Creator();
-        $image = $this->capchaImage->create($image, $this->capchaString);
+        $capchaName = $this->capchaImage->create($image, $this->capchaString);
+        
+        return $capchaName;
     }
     
     
+    /**
+     * @param string $postCapcha
+     * @return bool
+     */
+    public function checkCapcha($postCapcha) 
+    {
+        if (sha1(md5(sha1($postCapcha))) === $_SESSION['valous_capcha']) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
+    public function cleanTemp($all = false)
+    {
+        $tempDir = __DIR__ . '/../../temp/';
+        $dirHandle = opendir($tempDir);
+
+        while ($data = readdir($dirHandle)) {
+            $files[] = $data;
+        }   
+        
+        $files = array_diff($files, ['.', '..']);
+        
+        foreach ($files as $file) {
+            $filename = $tempDir . $file;
+            if (!$all && filemtime($filename) < (time() - 4)) {
+                unlink($filename);
+            } elseif ($all) {
+                unlink($filename); 
+            }
+        }
+    }
+    
+
+    /**
+     */
     private function generateChars()
     {
         $chars = $this->config['chars.yml'];

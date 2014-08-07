@@ -24,7 +24,20 @@ class Creator
         $this->image = imagecreatetruecolor($image->width, $image->height);
         $this->setBackground($image);
         $this->generateText($chars);
-        return imagejpeg($this->image, __DIR__ . '/../../temp/capcha.jpg');
+             
+        $string = '';
+        foreach ($chars as $char) {
+            $string .= $char->capchaChar;
+        }
+        
+        $capchaHash = sha1(md5(sha1($string)));
+        $name = time() . rand(0, 1000);
+
+        $_SESSION['valous_capcha'] = $capchaHash;
+        
+        $capchaPath = __DIR__ . "/../../temp/capcha_$name.jpg";
+        imagejpeg($this->image, $capchaPath);
+        return "capcha_$name.jpg";
     }
     
     
