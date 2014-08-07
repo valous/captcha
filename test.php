@@ -6,3 +6,4 @@ use Valous\Capcha\App\Engine;
 
 $configDir = __DIR__ . "/Capcha/Resources/Config";
 $engine = new Engine($configDir);
+$engine->createCapcha();

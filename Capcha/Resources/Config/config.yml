@@ -1,8 +1,30 @@
-Fonts:
-    Arial: Arial.ttf
-    Verdana: Verdana.ttf
-Color:
-    Red: 255
-    Blue: 255
-    Green: 255
-Lenght: 5
+ColorsBackground:
+    Red:
+        Min: 180
+        Max: 200
+    Blue:
+        Min: 100
+        Max: 200
+    Green:
+        Min: 170
+        Max: 200
+ColorsFont:
+    Red:
+        Min: 150
+        Max: 240
+    Blue:
+        Min: 30
+        Max: 240
+    Green:
+        Min: 30
+        Max: 100
+Lenght: 4
+Size:
+    Width: 300
+    Height: 100
+AngleChar:
+    Min: -45
+    Max: 45
+SizeChar:
+    Min: 50
+    Max: 80

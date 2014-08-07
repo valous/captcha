@@ -17,6 +17,9 @@ class Char
     /** @var int */
     public $capchaSize;
     
+    /** @var int */
+    public $capchaAngle;
+    
     /** @var int[] */
     public $capchaColor;
 }
