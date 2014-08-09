@@ -103,9 +103,18 @@ class Engine
             $char = new Char();
             $char->capchaChar = $chars[rand(0, (count($chars)) - 1)];
             $char->capchaColor = [
-                'Red' => rand($fontColor['Red']['Min'], $fontColor['Red']['Max']),
-                'Green' => rand($fontColor['Green']['Min'], $fontColor['Green']['Max']),
-                'Blue' => rand($fontColor['Blue']['Min'], $fontColor['Blue']['Max']),
+                'Red' => [
+                    rand($fontColor['Red']['Min'], $fontColor['Red']['Max']),
+                    rand($fontColor['Red']['Min'], $fontColor['Red']['Max'])
+                ],
+                'Green' => [
+                     rand($fontColor['Green']['Min'], $fontColor['Green']['Max']),
+                     rand($fontColor['Green']['Min'], $fontColor['Green']['Max']),
+                ],
+                'Blue' => [
+                    rand($fontColor['Blue']['Min'], $fontColor['Blue']['Max']),
+                    rand($fontColor['Blue']['Min'], $fontColor['Blue']['Max']),
+                ]
             ];
             $char->capchaFont = $fonts[rand(0, (count($fonts)) - 1)];
             $char->capchaSize = rand($this->config['config.yml']['SizeChar']['Min'], $this->config['config.yml']['SizeChar']['Max']);

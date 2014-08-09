@@ -1,23 +1,23 @@
 ColorsBackground:
     Red:
-        Min: 180
-        Max: 200
+        Min: 0
+        Max: 255
     Blue:
-        Min: 100
+        Min: 0
         Max: 200
     Green:
-        Min: 170
+        Min: 50
         Max: 200
 ColorsFont:
     Red:
-        Min: 150
-        Max: 240
+        Min: 0
+        Max: 255
     Blue:
-        Min: 30
-        Max: 240
+        Min: 0
+        Max: 255
     Green:
-        Min: 30
-        Max: 100
+        Min: 0
+        Max: 255
 Lenght: 4
 Size:
     Width: 300
@@ -27,4 +27,4 @@ AngleChar:
     Max: 45
 SizeChar:
     Min: 50
-    Max: 80
+    Max: 70
