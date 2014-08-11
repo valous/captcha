@@ -83,28 +83,40 @@ class Creator
     private function colorsFont(Char $char, $size, $countColor = 4) 
     {
         $image = imagecreatetruecolor($size['width'], $size['height']);
-        
         $image = $this->transparentImage($image);
         
-        // Následující část kódu je provizorní, bude změněna!
-        // ---------->
-        if ($countColor == 2) {
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => 0, 'y' => 0, 'width' => $size['width'], 'height' => ($size['height']/2)]), 0, 0, 0, 0, $size['width'], ($size['height'] / 2));
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => 0, 'y' => ($size['height']/2), 'width' => $size['width'], 'height' => ($size['height']/2)]), 0, ($size['height']/2)-1, 0, 0, $size['width'], ($size['height'] / 2));
-        } elseif ($countColor == 4) {
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => 0, 'y' => 0, 'width' => ($size['width'] / 2), 'height' => ($size['height']/2)+1]), 0, 0, 0, 0, $size['width']/2, ($size['height'] / 2));
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => 0, 'y' => ($size['height']/2), 'width' => ($size['width'] / 2), 'height' => ($size['height']/2)+1]), 0, ($size['height']/2), 0, 0, $size['width']/2, ($size['height'] / 2));
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => ($size['width'] / 2), 'y' => 0, 'width' => ($size['width'] / 2), 'height' => ($size['height']/2)+2]), $size['width']/2, 0, 0, 0, $size['width']/2, ($size['height'] / 2));
-            imagecopy($image, $this->generateColorFont($char, $size, ['x' => ($size['width'] / 2), 'y' => ($size['height']/2), 'width' => ($size['width'] / 2), 'height' => ($size['height']/2)+2]), $size['width']/2, ($size['height']/2), 0, 0, $size['width']/2, ($size['height'] / 2));
+        for ($i = 1; $i <= $countColor; $i++) {
+            $this->cropImage($char, $image, $i, $countColor);
         }
-        // <----------
         
-        $imagename = __DIR__ . '/../../temp/char_' . time() . rand(0, 1000) . $char->capchaChar . '.png';
+        $imagename = __DIR__ . '/../../temp/char_' . time() . '_' . rand(0, 1000) . '_' . $char->capchaChar . '.png';
         
         imagepng($image, $imagename);
         imagedestroy($image);
         
         return $imagename;
+    }
+    
+    
+    /**
+     * @param Char $char
+     * @param Recources $image
+     * @param int $actual
+     * @param int $count
+     * @return Recources
+     */
+    private function cropImage(Char $char, $image, $actual, $count) 
+    {
+        $width = imagesx($image) / ($count / 2);
+        $height = imagesy($image) / ($count / 2);
+        $x = (($count - $actual) > ($count / 2)) ? ($actual - 1) * $width : abs($count - $actual - 1) * $width;
+        $y = (($count - $actual) >= ($count / 2)) ? 0 : $height;
+        $size = ['width' => imagesx($image), 'height' => imagesy($image)];
+        
+        $cropImage = $this->generateColorFont($char, $size, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => ($height + 1)]);
+        imagecopy($image, $cropImage, $x, $y, 0, 0, $width, $height);
+        
+        return $image;
     }
     
     

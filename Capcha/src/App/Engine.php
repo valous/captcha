@@ -68,6 +68,9 @@ class Engine
     }
     
     
+    /**
+     * @param bool $all
+     */
     public function cleanTemp($all = false)
     {
         $tempDir = __DIR__ . '/../../temp/';
