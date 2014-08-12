@@ -1,11 +1,11 @@
 {
-    "name": "valous/capcha",
+    "name": "valous/captcha",
     "type": "library",
     "license": "none",
-    "description": "Capcha",
+    "description": "Captcha",
     "autoload": {
         "psr-4": {
-            "Valous\\Capcha\\": "Capcha/src/"
+            "Valous\\Capcha\\": "Captcha/src/"
         }
     },
     "require": {
