@@ -24,7 +24,8 @@ class Creator
         $this->image = imagecreatetruecolor($image->width, $image->height);
         $this->setBackground($image);
         $this->generateText($chars);
-             
+        $this->drawLine($image->line);   
+        
         $string = '';
         foreach ($chars as $char) {
             $string .= $char->capchaChar;
@@ -77,13 +78,14 @@ class Creator
     /**
      * @param Char $char
      * @param int[] $size
-     * @param int $countColor => 2 OR 4
+     * @param bool $countColor
      * @return Resources
      */
-    private function colorsFont(Char $char, $size, $countColor = 4) 
+    private function colorsFont(Char $char, $size, $countColor = true) 
     {
         $image = imagecreatetruecolor($size['width'], $size['height']);
         $image = $this->transparentImage($image);
+        $countColor = ($countColor)?4:2;        
         
         for ($i = 1; $i <= $countColor; $i++) {
             $this->cropImage($char, $image, $i, $countColor);
@@ -153,5 +155,33 @@ class Creator
         imagesavealpha($image, false);
         
         return $image;
+    }
+    
+    
+    /**
+     * @var int[][][] $config
+     */
+    private function drawLine($config)
+    {
+        $count = rand($config['Count']['Min'], $config['Count']['Max']);
+        $width = imagesx($this->image);
+        $height = imagesy($this->image);
+        
+        for ($i = 0; $i < $count; $i++) {
+            $size = rand($config['Size']['Min'], $config['Size']['Max']);
+            $x1 = rand(0, $width);
+            $x2 = rand(0, $width);
+            $y1 = rand(0, $height);
+            $y2 = rand(0, $height);
+            $color = imagecolorallocate($this->image,
+                    rand($config['Color']['Red']['Min'], $config['Color']['Red']['Max']),
+                    rand($config['Color']['Green']['Min'], $config['Color']['Green']['Max']),
+                    rand($config['Color']['Blue']['Min'], $config['Color']['Blue']['Max'])
+            );
+            
+            for($o = 0; $o < $size; $o++) {
+                imageline($this->image, $x1, $y1 + $o, $x2, $y2 + $o, $color);
+            }
+        }
     }
 }

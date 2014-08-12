@@ -44,6 +44,7 @@ class Engine
         $image->height = $this->config['config.yml']['Size']['Height'];
         $image->width = $this->config['config.yml']['Size']['Width'];
         $image->backgroundColor = $this->config['config.yml']['ColorsBackground'];
+        $image->line = $this->config['config.yml']['Line'];
         
         $this->generateChars();
         
@@ -60,7 +61,7 @@ class Engine
      */
     public function checkCapcha($postCapcha) 
     {
-        if (sha1(md5(sha1($postCapcha))) === $_SESSION['valous_capcha']) {
+        if (sha1(md5(sha1(strtolower($postCapcha)))) === $_SESSION['valous_capcha']) {
             return true;
         }
         

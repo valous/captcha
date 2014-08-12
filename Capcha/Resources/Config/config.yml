@@ -18,13 +18,30 @@ ColorsFont:
     Green:
         Min: 0
         Max: 255
+Line:
+    Count:
+        Min: 4
+        Max: 12
+    Size:
+        Min: 2
+        Max: 6
+    Color:
+        Red:
+            Min: 0
+            Max: 255
+        Blue:
+            Min: 0
+            Max: 255
+        Green:
+            Min: 0
+            Max: 255
 Lenght: 4
 Size:
     Width: 400
     Height: 100
 AngleChar:
-    Min: -40
-    Max: 40
+    Min: -45
+    Max: 45
 SizeChar:
-    Min: 40
-    Max: 70
+    Min: 45
+    Max: 60

@@ -16,4 +16,7 @@ class Image
     
     /** @var int[][] */
     public $backgroundColor;
+    
+    /** @var int[][][] */
+    public $line;
 }
