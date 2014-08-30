@@ -2,16 +2,16 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Valous\Capcha\App\Engine;
+use Valous\Captcha\App\Engine;
 
 $configDir = __DIR__ . "/Captcha/Resources/Config";
 $engine = new Engine($configDir);
 
 if (isset($_POST['valous_capcha'])) {
-    $validate = $engine->checkCapcha($_POST['valous_capcha']);
+    $validate = $engine->checkCaptcha($_POST['valous_capcha']);
 }
 
-$capchaName = $engine->createCapcha();
+$capchaName = $engine->createCaptcha();
 
 ?>
 
@@ -39,4 +39,3 @@ $capchaName = $engine->createCapcha();
         </form>
     </body>
 </html>
-

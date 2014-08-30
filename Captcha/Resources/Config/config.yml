@@ -35,13 +35,14 @@ Line:
         Green:
             Min: 0
             Max: 255
-Lenght: 4
+Lenght: 5
 Size:
     Width: 400
-    Height: 100
+    Height: 60
 AngleChar:
     Min: -45
     Max: 45
 SizeChar:
-    Min: 45
-    Max: 60
+    Min: 25
+    Max: 40
+    

@@ -1,9 +1,9 @@
 <?php
 
-namespace Valous\Capcha\App;
+namespace Valous\Captcha\App;
 
-use Valous\Capcha\Entity\Image;
-use Valous\Capcha\Entity\Char;
+use Valous\Captcha\Entity\Image;
+use Valous\Captcha\Entity\Char;
 
 
 /**

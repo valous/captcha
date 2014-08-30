@@ -3,9 +3,10 @@
     "type": "library",
     "license": "none",
     "description": "Captcha",
+    "author": "David Valenta <david.valenta96@gmail.com>",
     "autoload": {
         "psr-4": {
-            "Valous\\Capcha\\": "Captcha/src/"
+            "Valous\\Captcha\\": "Captcha/src/"
         }
     },
     "require": {

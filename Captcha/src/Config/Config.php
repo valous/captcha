@@ -1,6 +1,6 @@
 <?php
 
-namespace Valous\Capcha\Config;
+namespace Valous\Captcha\Config;
 
 use Symfony\Component\Yaml\Parser;
 

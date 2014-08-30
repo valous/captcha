@@ -1,11 +1,11 @@
 <?php
 
-namespace Valous\Capcha\App;
+namespace Valous\Captcha\App;
 
-use Valous\Capcha\Entity\Char;
-use Valous\Capcha\Config\Config;
-use Valous\Capcha\Entity\Image;
-use Valous\Capcha\App\Creator;
+use Valous\Captcha\Entity\Char;
+use Valous\Captcha\Config\Config;
+use Valous\Captcha\Entity\Image;
+use Valous\Captcha\App\Creator;
 
 
 /**
@@ -38,7 +38,7 @@ class Engine
     /**
      * @return string
      */
-    public function createCapcha()
+    public function createCaptcha()
     {       
         $image = new Image();
         $image->height = $this->config['config.yml']['Size']['Height'];
@@ -56,12 +56,12 @@ class Engine
     
     
     /**
-     * @param string $postCapcha
+     * @param string $postCaptcha
      * @return bool
      */
-    public function checkCapcha($postCapcha) 
+    public function checkCaptcha($postCaptcha) 
     {
-        if (sha1(md5(sha1(strtolower($postCapcha)))) === $_SESSION['valous_capcha']) {
+        if (sha1(md5(sha1(strtolower($postCaptcha)))) === $_SESSION['valous_capcha']) {
             return true;
         }
         
