@@ -22,14 +22,21 @@ class Engine
     /** @var Creator */
     private $capchaImage;
     
+    /** @var string */
+    private $tempDir;
+    
     /**
      * @param string $configDir
+     * @param string $tempDir
      */
-    public function __construct($configDir)
+    public function __construct($configDir, $tempDir)
     {
-        session_start();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
         $config = new Config($configDir);
         $this->config = $config->getConfig();
+        $this->tempDir = $tempDir;
         
         $this->cleanTemp();
     }
@@ -48,7 +55,7 @@ class Engine
         
         $this->generateChars();
         
-        $this->capchaImage = new Creator();
+        $this->capchaImage = new Creator($this->tempDir);
         $capchaName = $this->capchaImage->create($image, $this->capchaString);
         
         return $capchaName;
@@ -74,8 +81,7 @@ class Engine
      */
     public function cleanTemp($all = false)
     {
-        $tempDir = __DIR__ . '/../../temp/';
-        $dirHandle = opendir($tempDir);
+        $dirHandle = opendir($this->tempDir);
 
         while ($data = readdir($dirHandle)) {
             $files[] = $data;
@@ -84,7 +90,7 @@ class Engine
         $files = array_diff($files, ['.', '..']);
         
         foreach ($files as $file) {
-            $filename = $tempDir . $file;
+            $filename = $this->tempDir . $file;
             if (!$all && filemtime($filename) < (time() - 4)) {
                 unlink($filename);
             } elseif ($all) {

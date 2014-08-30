@@ -5,7 +5,9 @@ require __DIR__ . '/vendor/autoload.php';
 use Valous\Captcha\App\Engine;
 
 $configDir = __DIR__ . "/Captcha/Resources/Config";
-$engine = new Engine($configDir);
+$tempDir = __DIR__ . "/temp/";
+
+$engine = new Engine($configDir, $tempDir);
 
 if (isset($_POST['valous_capcha'])) {
     $validate = $engine->checkCaptcha($_POST['valous_capcha']);
@@ -21,7 +23,7 @@ $capchaName = $engine->createCaptcha();
         <meta charset="UTF-8">
     </head>         
     <body>
-        <img src="./Captcha/temp/<?php echo $capchaName; ?>">
+        <img src="./temp/<?php echo $capchaName; ?>">
 
         <?php
             if (isset($validate)) {
