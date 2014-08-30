@@ -14,6 +14,17 @@ class Creator
     /** @var ImageResources */
     private $image;
 
+    /** @var string */
+    private $tempDir;
+    
+    
+    /**
+     * @param string $tempDir
+     */
+    public function __construct($tempDir) {
+        $this->tempDir = $tempDir;
+    }
+    
 
     /**
      * @param Image $image
@@ -36,7 +47,7 @@ class Creator
 
         $_SESSION['valous_capcha'] = $capchaHash;
         
-        $capchaPath = __DIR__ . "/../../temp/capcha_$name.png";
+        $capchaPath = "$this->tempDir/capcha_$name.png";
         imagepng($this->image, $capchaPath);
         return "capcha_$name.png";
     }
@@ -91,7 +102,7 @@ class Creator
             $this->cropImage($char, $image, $i, $countColor);
         }
         
-        $imagename = __DIR__ . '/../../temp/char_' . time() . '_' . rand(0, 1000) . '_' . $char->capchaChar . '.png';
+        $imagename = $this->tempDir . 'char_' . time() . '_' . rand(0, 1000) . '_' . $char->capchaChar . '.png';
         
         imagepng($image, $imagename);
         imagedestroy($image);
