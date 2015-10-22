@@ -14,44 +14,28 @@ class Creator
     /** @var resource */
     private $image;
 
-    /** @var string */
-    private $tempDir;
-    
-    
-    /**
-     * @param string $tempDir
-     */
-    public function __construct($tempDir) {
-        $this->tempDir = $tempDir;
-    }
-    
 
     /**
      * @param Image $image
      * @param Char[] $chars
-     * @return string
+     * @return resource
      */
     public function create(Image $image, array $chars)
     {
         $this->image = imagecreatetruecolor($image->width, $image->height);
         $this->setBackground($image);
         $this->generateText($chars);
-        $this->drawLine($image->line);   
-        
-        $string = '';
-        foreach ($chars as $char) {
-            $string .= $char->captchaChar;
-        }
-        
-        $captchaHash = sha1(md5(sha1($string)));
-        $name = time() . rand(0, 1000);
+        $this->drawLine($image->line);
 
+        $onlyChars = [];
+        foreach ($chars as $char) {
+            $onlyChars[] = $char->captchaChar;
+        }
+
+        $captchaHash = sha1(implode('', $onlyChars));
         $_SESSION['valous_captcha'] = $captchaHash;
-        
-        $captchaPath = "$this->tempDir/captcha_$name.png";
-        imagepng($this->image, $captchaPath);
-        
-        return "captcha_$name.png";
+
+        return $this->image;
     }
     
     
@@ -79,9 +63,8 @@ class Creator
         $positionX = 0;
         
         foreach ($chars as $char) {
-            $imageName = $this->colorsFont($char, ["width" => ($width / count($chars)), "height" => $height]);
-            $image = imagecreatefrompng($imageName);
-                       
+            $image = $this->colorsFont($char, ["width" => ($width / count($chars)), "height" => $height]);
+
             imagecopymerge($this->image, $image, $positionX, 0, 0, 0, $width, $height, 100);
             $positionX += $width / count($chars);
         }
@@ -103,13 +86,8 @@ class Creator
         for ($i = 1; $i <= $countColor; $i++) {
             $this->cropImage($char, $image, $i, $countColor);
         }
-        
-        $imageName = $this->tempDir . 'char_' . time() . '_' . rand(0, 1000) . '_' . $char->captchaChar . '.png';
-        
-        imagepng($image, $imageName);
-        imagedestroy($image);
-        
-        return $imageName;
+
+        return $image;
     }
     
     
@@ -163,7 +141,7 @@ class Creator
      */
     private function transparentImage($image) 
     {
-        $black = imagecolorallocatealpha($image, 0, 0, 0, 127);
+        $black = imagecolorallocatealpha($image, 0, 0, 0, 0);
         imagecolortransparent($image, $black);
         imagesavealpha($image, false);
         
