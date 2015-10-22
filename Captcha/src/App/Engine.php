@@ -5,7 +5,6 @@ namespace Valous\Captcha\App;
 use Valous\Captcha\Entity\Char;
 use Valous\Captcha\Config\Config;
 use Valous\Captcha\Entity\Image;
-use Valous\Captcha\App\Creator;
 
 
 /**
@@ -13,32 +12,24 @@ use Valous\Captcha\App\Creator;
  */
 class Engine
 {
-    /** @var Char[] */
-    private $capchaString;
-    
     /** @var array */
     private $config;
-    
-    /** @var Creator */
-    private $capchaImage;
-    
-    /** @var string */
-    private $tempDir;
+
+    /** @var resource */
+    private $captcha;
+
     
     /**
      * @param string $configDir
-     * @param string $tempDir
      */
-    public function __construct($configDir, $tempDir)
+    public function __construct($configDir)
     {
         if (!isset($_SESSION)) {
             session_start();
         }
+
         $config = new Config($configDir);
         $this->config = $config->getConfig();
-        $this->tempDir = $tempDir;
-        
-        $this->cleanTemp();
     }
 
     
@@ -53,54 +44,49 @@ class Engine
         $image->backgroundColor = $this->config['config.yml']['ColorsBackground'];
         $image->line = $this->config['config.yml']['Line'];
         
-        $this->generateChars();
+        $captchaChars = $this->generateChars();
         
-        $this->capchaImage = new Creator($this->tempDir);
-        $capchaName = $this->capchaImage->create($image, $this->capchaString);
-        
-        return $capchaName;
+        $captchaImage = new Creator();
+        $this->captcha = $captchaImage->create($image, $captchaChars);
     }
-    
-    
+
+
+    /**
+     */
+    public function render()
+    {
+        header('Content-Type: image/png');
+        imagepng($this->captcha);
+        imagedestroy($this->captcha);
+    }
+
+
+    /**
+     * @param string $fileName
+     */
+    public function save($fileName)
+    {
+        imagepng($this->captcha, $fileName);
+        imagedestroy($this->captcha);
+    }
+
+
     /**
      * @param string $postCaptcha
      * @return bool
      */
     public function checkCaptcha($postCaptcha) 
     {
-        if (sha1(md5(sha1(strtolower($postCaptcha)))) === $_SESSION['valous_capcha']) {
+        if (sha1(strtolower($postCaptcha)) === $_SESSION['valous_captcha']) {
             return true;
         }
         
         return false;
     }
-    
-    
-    /**
-     * @param bool $all
-     */
-    public function cleanTemp($all = false)
-    {
-        $dirHandle = opendir($this->tempDir);
 
-        while ($data = readdir($dirHandle)) {
-            $files[] = $data;
-        }   
-        
-        $files = array_diff($files, ['.', '..']);
-        
-        foreach ($files as $file) {
-            $filename = $this->tempDir . $file;
-            if (!$all && filemtime($filename) < (time() - 4)) {
-                unlink($filename);
-            } elseif ($all) {
-                unlink($filename); 
-            }
-        }
-    }
-    
 
     /**
+     * @return Char[]
      */
     private function generateChars()
     {
@@ -108,11 +94,12 @@ class Engine
         $fonts = $this->config['fonts.yml'];
         
         $fontColor = $this->config['config.yml']['ColorsFont'];
-        
+
+        $captchaString = [];
         for ($i = 0; $i < $this->config['config.yml']['Lenght']; $i++) {
             $char = new Char();
-            $char->capchaChar = $chars[rand(0, (count($chars)) - 1)];
-            $char->capchaColor = [
+            $char->captchaChar = $chars[rand(0, (count($chars)) - 1)];
+            $char->captchaColor = [
                 'Red' => [
                     rand($fontColor['Red']['Min'], $fontColor['Red']['Max']),
                     rand($fontColor['Red']['Min'], $fontColor['Red']['Max'])
@@ -126,11 +113,13 @@ class Engine
                     rand($fontColor['Blue']['Min'], $fontColor['Blue']['Max']),
                 ]
             ];
-            $char->capchaFont = $fonts[rand(0, (count($fonts)) - 1)];
-            $char->capchaSize = rand($this->config['config.yml']['SizeChar']['Min'], $this->config['config.yml']['SizeChar']['Max']);
-            $char->capchaAngle = rand($this->config['config.yml']['AngleChar']['Min'], $this->config['config.yml']['AngleChar']['Max']);
+            $char->captchaFont = $fonts[rand(0, (count($fonts)) - 1)];
+            $char->captchaSize = rand($this->config['config.yml']['SizeChar']['Min'], $this->config['config.yml']['SizeChar']['Max']);
+            $char->captchaAngle = rand($this->config['config.yml']['AngleChar']['Min'], $this->config['config.yml']['AngleChar']['Max']);
             
-            $this->capchaString[] = $char;
+            $captchaString[] = $char;
         }
+
+        return $captchaString;
     }
 }

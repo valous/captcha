@@ -19,11 +19,12 @@ class Config
      */
     public function __construct($configDir)
     {
-        $yaml = new Parser();
-       
+        $yml = new Parser();
+
+        $configFilesPath = [];
         if (is_dir($configDir)) {
             $dirHandler = openDir($configDir);
-            
+
             while ($data = readdir($dirHandler)) {
                 $configFilesPath[] = $data;
             }
@@ -33,9 +34,8 @@ class Config
         }
         
         $config = [];
-        
         foreach ($configFilesPath as $configFilePath) {
-            $config[$configFilePath] = $yaml->parse(file_get_contents($configDir . '/' . $configFilePath));
+            $config[$configFilePath] = $yml->parse(file_get_contents($configDir . '/' . $configFilePath));
         }
         
         $this->config = $config;
