@@ -9,17 +9,17 @@ namespace Valous\Captcha\Entity;
 class Char
 {
     /** @var string */
-    public $capchaChar;
+    public $captchaChar;
     
     /** @var string */
-    public $capchaFont;
+    public $captchaFont;
     
     /** @var int */
-    public $capchaSize;
+    public $captchaSize;
     
     /** @var int */
-    public $capchaAngle;
+    public $captchaAngle;
     
     /** @var int[] */
-    public $capchaColor;
+    public $captchaColor;
 }

@@ -11,7 +11,7 @@ use Valous\Captcha\Entity\Char;
  */
 class Creator
 {
-    /** @var ImageResources */
+    /** @var resource */
     private $image;
 
     /** @var string */
@@ -29,8 +29,9 @@ class Creator
     /**
      * @param Image $image
      * @param Char[] $chars
+     * @return string
      */
-    public function create(Image $image, $chars)
+    public function create(Image $image, array $chars)
     {
         $this->image = imagecreatetruecolor($image->width, $image->height);
         $this->setBackground($image);
@@ -39,17 +40,18 @@ class Creator
         
         $string = '';
         foreach ($chars as $char) {
-            $string .= $char->capchaChar;
+            $string .= $char->captchaChar;
         }
         
-        $capchaHash = sha1(md5(sha1($string)));
+        $captchaHash = sha1(md5(sha1($string)));
         $name = time() . rand(0, 1000);
 
-        $_SESSION['valous_capcha'] = $capchaHash;
+        $_SESSION['valous_captcha'] = $captchaHash;
         
-        $capchaPath = "$this->tempDir/capcha_$name.png";
-        imagepng($this->image, $capchaPath);
-        return "capcha_$name.png";
+        $captchaPath = "$this->tempDir/captcha_$name.png";
+        imagepng($this->image, $captchaPath);
+        
+        return "captcha_$name.png";
     }
     
     
@@ -77,8 +79,8 @@ class Creator
         $positionX = 0;
         
         foreach ($chars as $char) {
-            $imagename = $this->colorsFont($char, ["width" => ($width / count($chars)), "height" => $height]);
-            $image = imagecreatefrompng($imagename);
+            $imageName = $this->colorsFont($char, ["width" => ($width / count($chars)), "height" => $height]);
+            $image = imagecreatefrompng($imageName);
                        
             imagecopymerge($this->image, $image, $positionX, 0, 0, 0, $width, $height, 100);
             $positionX += $width / count($chars);
@@ -90,7 +92,7 @@ class Creator
      * @param Char $char
      * @param int[] $size
      * @param bool $countColor
-     * @return Resources
+     * @return resource
      */
     private function colorsFont(Char $char, $size, $countColor = true) 
     {
@@ -102,21 +104,21 @@ class Creator
             $this->cropImage($char, $image, $i, $countColor);
         }
         
-        $imagename = $this->tempDir . 'char_' . time() . '_' . rand(0, 1000) . '_' . $char->capchaChar . '.png';
+        $imageName = $this->tempDir . 'char_' . time() . '_' . rand(0, 1000) . '_' . $char->captchaChar . '.png';
         
-        imagepng($image, $imagename);
+        imagepng($image, $imageName);
         imagedestroy($image);
         
-        return $imagename;
+        return $imageName;
     }
     
     
     /**
      * @param Char $char
-     * @param Recources $image
+     * @param resource $image
      * @param int $actual
      * @param int $count
-     * @return Recources
+     * @return resource
      */
     private function cropImage(Char $char, $image, $actual, $count) 
     {
@@ -137,17 +139,17 @@ class Creator
      * @param Char $char
      * @param array $size
      * @param array $cropData
-     * @return Resources
+     * @return resource
      */
     private function generateColorFont(Char $char, $size, $cropData) 
     {
         $image = imagecreatetruecolor($size['width'], $size['height']);
-        $color = imagecolorallocate($image, $char->capchaColor['Red'][rand(0,1)], $char->capchaColor['Green'][rand(0,1)], $char->capchaColor['Blue'][rand(0,1)]);              
+        $color = imagecolorallocate($image, $char->captchaColor['Red'][rand(0,1)], $char->captchaColor['Green'][rand(0,1)], $char->captchaColor['Blue'][rand(0,1)]);              
         
         $image = $this->transparentImage($image);
         
-        $font =  __DIR__ . '/../../Resources/Fonts/' . $char->capchaFont;
-        imagettftext($image, $char->capchaSize, $char->capchaAngle, 20, ($size['height'] / 2) + 20, $color, $font, $char->capchaChar);
+        $font =  __DIR__ . '/../../Resources/Fonts/' . $char->captchaFont;
+        imagettftext($image, $char->captchaSize, $char->captchaAngle, 20, ($size['height'] / 2) + 20, $color, $font, $char->captchaChar);
         
         $img = imagecrop($image, $cropData);
         
@@ -156,8 +158,8 @@ class Creator
     
     
     /**
-     * @param Recources $image
-     * @return Recources
+     * @param resource $image
+     * @return resource
      */
     private function transparentImage($image) 
     {

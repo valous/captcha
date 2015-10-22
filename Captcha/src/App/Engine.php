@@ -5,7 +5,6 @@ namespace Valous\Captcha\App;
 use Valous\Captcha\Entity\Char;
 use Valous\Captcha\Config\Config;
 use Valous\Captcha\Entity\Image;
-use Valous\Captcha\App\Creator;
 
 
 /**
@@ -14,13 +13,13 @@ use Valous\Captcha\App\Creator;
 class Engine
 {
     /** @var Char[] */
-    private $capchaString;
+    private $captchaString;
     
     /** @var array */
     private $config;
     
     /** @var Creator */
-    private $capchaImage;
+    private $captchaImage;
     
     /** @var string */
     private $tempDir;
@@ -55,10 +54,10 @@ class Engine
         
         $this->generateChars();
         
-        $this->capchaImage = new Creator($this->tempDir);
-        $capchaName = $this->capchaImage->create($image, $this->capchaString);
+        $this->captchaImage = new Creator($this->tempDir);
+        $captchaName = $this->captchaImage->create($image, $this->captchaString);
         
-        return $capchaName;
+        return $captchaName;
     }
     
     
@@ -68,7 +67,7 @@ class Engine
      */
     public function checkCaptcha($postCaptcha) 
     {
-        if (sha1(md5(sha1(strtolower($postCaptcha)))) === $_SESSION['valous_capcha']) {
+        if (sha1(md5(sha1(strtolower($postCaptcha)))) === $_SESSION['valous_captcha']) {
             return true;
         }
         
@@ -83,6 +82,7 @@ class Engine
     {
         $dirHandle = opendir($this->tempDir);
 
+        $files = [];
         while ($data = readdir($dirHandle)) {
             $files[] = $data;
         }   
@@ -111,8 +111,8 @@ class Engine
         
         for ($i = 0; $i < $this->config['config.yml']['Lenght']; $i++) {
             $char = new Char();
-            $char->capchaChar = $chars[rand(0, (count($chars)) - 1)];
-            $char->capchaColor = [
+            $char->captchaChar = $chars[rand(0, (count($chars)) - 1)];
+            $char->captchaColor = [
                 'Red' => [
                     rand($fontColor['Red']['Min'], $fontColor['Red']['Max']),
                     rand($fontColor['Red']['Min'], $fontColor['Red']['Max'])
@@ -126,11 +126,11 @@ class Engine
                     rand($fontColor['Blue']['Min'], $fontColor['Blue']['Max']),
                 ]
             ];
-            $char->capchaFont = $fonts[rand(0, (count($fonts)) - 1)];
-            $char->capchaSize = rand($this->config['config.yml']['SizeChar']['Min'], $this->config['config.yml']['SizeChar']['Max']);
-            $char->capchaAngle = rand($this->config['config.yml']['AngleChar']['Min'], $this->config['config.yml']['AngleChar']['Max']);
+            $char->captchaFont = $fonts[rand(0, (count($fonts)) - 1)];
+            $char->captchaSize = rand($this->config['config.yml']['SizeChar']['Min'], $this->config['config.yml']['SizeChar']['Max']);
+            $char->captchaAngle = rand($this->config['config.yml']['AngleChar']['Min'], $this->config['config.yml']['AngleChar']['Max']);
             
-            $this->capchaString[] = $char;
+            $this->captchaString[] = $char;
         }
     }
 }
